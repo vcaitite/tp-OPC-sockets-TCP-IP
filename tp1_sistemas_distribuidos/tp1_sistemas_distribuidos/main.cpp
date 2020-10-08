@@ -13,6 +13,7 @@ int main() {
 
     printf("\n\n\t\t\t\t Trabalho Pratico sobre OPC e Socket TCP/IP by Vitor & Joao\n");
 	std::thread socket_server(socketServer);
+    // Teste Git - adiciona comentário
 	socket_server.join();
 	return 1;
 }
