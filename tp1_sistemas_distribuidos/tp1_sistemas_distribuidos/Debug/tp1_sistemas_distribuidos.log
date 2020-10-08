@@ -1,0 +1,3 @@
+﻿  msg_treatment.cpp
+C:\Users\vitor\Desktop\tp_sistemas_distribuidos\tp1_sistemas_distribuidos\tp1_sistemas_distribuidos\msg_treatment.cpp(56): warning C4715: 'socketMsgTreatment': nem todos os caminhos de controle retornam um valor
+  tp1_sistemas_distribuidos.vcxproj -> C:\Users\vitor\Desktop\tp_sistemas_distribuidos\tp1_sistemas_distribuidos\Debug\tp1_sistemas_distribuidos.exe
