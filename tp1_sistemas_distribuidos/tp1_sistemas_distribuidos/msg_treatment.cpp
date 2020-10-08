@@ -34,13 +34,13 @@ char * socketMsgTreatment(char * recvbuf, int recvbuflen) {
 		break;
 		case 99: 
 			SetConsoleTextAttribute(handle, ORANGE);
-			printf("\t-> Parametros de carregamento recebidos!");
+			printf("\t-> Parametros de carregamento recebidoss!");
 			SetConsoleTextAttribute(handle, WHITE);
 			// Lendo dados:
 			sscanf_s(&recvbuf[9], "%5d", &loadingParameters.openTime);
 			sscanf_s(&recvbuf[15], "%7f", &loadingParameters.oreQuantity);
-			printf("\n\t-> open time: %d", loadingParameters.openTime);
-			printf("\n\t-> quantity: %7.2f", loadingParameters.oreQuantity);
+			printf("\n\t* Tempo de abertura da comporta do silo: %d seg.", loadingParameters.openTime);
+			printf("\n\t* Quantidade de minerio a carregar: %7.2f kg", loadingParameters.oreQuantity);
 			// Escrevendo dados na mensagem: 
 			snprintf(bufInt, 6, "%05d", ++countMessages);
 			memcpy(&ackMsg[3], bufInt, 5);

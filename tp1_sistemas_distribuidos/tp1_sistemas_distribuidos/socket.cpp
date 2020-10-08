@@ -108,7 +108,7 @@ void __cdecl socketServer(void)
     }
     printf("\t\t\t[+] Sucesso!\n");
 
-    closesocket(ListenSocket);
+    //closesocket(ListenSocket);
 
     printf("\n\t[+] Servidor pronto para receber dados!!!\n\n");
     // Recebe ate o cliente encerrar a conexao
@@ -163,14 +163,37 @@ void __cdecl socketServer(void)
             SetConsoleTextAttribute(handle, HLRED);
             printf("\t\t\t\t\t[-] recv() falhou! Erro: %d\n", WSAGetLastError());
             SetConsoleTextAttribute(handle, WHITE);
-            closesocket(ClientSocket);
-            WSACleanup();
-            return;
+            countMessages = 0;
+            //closesocket(ClientSocket);
+            //WSACleanup();
+            printf("\t-> listen()...");
+            iResult = listen(ListenSocket, SOMAXCONN);
+            if (iResult == SOCKET_ERROR) {
+                printf("\t\t\t\t\t\t[-] listen() falhou! Erro: %d\n\n", WSAGetLastError());
+                closesocket(ListenSocket);
+                WSACleanup();
+                return;
+            }
+            printf("\t\t\t\t\t\t[+] Sucesso!\n");
+
+            printf("\t-> Aguardando conexoes! accept()...");
+            // Aceitando um cliente socket
+            ClientSocket = accept(ListenSocket, NULL, NULL);
+            if (ClientSocket == INVALID_SOCKET) {
+                printf("\t\t\t[-] accept() falhou! Erro: %d\n\n", WSAGetLastError());
+                closesocket(ListenSocket);
+                WSACleanup();
+                return;
+            }
+            printf("\t\t\t[+] Sucesso!\n");
+            printf("\n\t[+] Servidor pronto para receber dados!!!\n\n");
+            //return;
         }
 
     } while (1);
 
     printf("\t-> Encerrando...");
+    closesocket(ListenSocket);
     // Fexando a conexao quando terminarmos
     iResult = shutdown(ClientSocket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
