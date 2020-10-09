@@ -43,6 +43,6 @@ void AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem, int index);
 void ReadItems(IUnknown* pGroupIUnknown, OPCHANDLE hServerItem, VARIANT& varValue);
 void RemoveItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE hServerItem);
 void RemoveGroup(IOPCServer* pIOPCServer, OPCHANDLE hServerGroup);
-void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE* hServerItem, VARIANT* varValue, VARIANT& returnTestValue);
+void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE hServerItem, VARIANT &varValue, VARIANT& returnTestValue);
 void __cdecl opcClient(void);
 #endif

@@ -66,14 +66,14 @@ void __cdecl opcClient(void) {
 				//Synchronous read of the device´s item value.
 				VARIANT varValue; //to store the read value
 				VariantInit(&varValue);
-				varValue.fltVal = 15.55;
+				varValue.intVal = 15;
+
 
 				VARIANT returnTestValue; //to store the read value
 				VariantInit(&returnTestValue);
 
-				printf("Reading synchronously during 10 seconds...\n");
-				OPCHANDLE temp_list[] = { H_ITEMS_READ_HANDLE[5] };
-				WriteItem(pIOPCItemMgt, 1, temp_list, &varValue, returnTestValue);
+				//OPCHANDLE temp_list[] = { H_ITEMS_READ_HANDLE[5] };
+				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue, returnTestValue);
 				printf("------------ TRY TO PROCESS WRITE: %6.2f \n", returnTestValue.fltVal);
 				SHOULD_WRITE = false;
 			}
@@ -105,7 +105,7 @@ void __cdecl opcClient(void) {
 		CoUninitialize();
 }
 
-void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE * hServerItem, VARIANT* varValue, VARIANT& returnTestValue)
+void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE hServerItem, VARIANT &varValue, VARIANT& returnTestValue)
 {
 	// value of the item:
 	OPCITEMSTATE* pValue = NULL;
@@ -116,13 +116,13 @@ void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE * hServerItem,
 
 	// read the item value from the device:
 	HRESULT* pErrors = NULL; //to store error code(s)
-	HRESULT hr = pIOPCSyncIO->Write(dwCount, hServerItem, varValue, &pErrors);
+	HRESULT hr = pIOPCSyncIO->Write(dwCount, &hServerItem, &varValue, &pErrors);
 	/*_ASSERT(!hr);
 	_ASSERT(pValue != NULL);*/
 
 	// read the item value from the device:
 	HRESULT* pErrors2 = NULL; //to store error code(s)
-	HRESULT hrr = pIOPCSyncIO->Read(OPC_DS_DEVICE, 1, hServerItem, &pValue, &pErrors2);
+	HRESULT hrr = pIOPCSyncIO->Read(OPC_DS_DEVICE, 1, &hServerItem, &pValue, &pErrors2);
 	_ASSERT(!hrr);
 	_ASSERT(pValue != NULL);
 	returnTestValue = pValue[0].vDataValue;
