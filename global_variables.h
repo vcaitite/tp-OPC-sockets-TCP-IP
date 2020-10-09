@@ -8,6 +8,7 @@
 #define POSITION_MSG_LENGHT 35
 #define LOADING_PARAMETERS_MSG_LENGHT 23
 #define ACK_MSG_LENGHT 9
+#define ITEMS_QUANTITY 6
 
 
 #define WHITE   FOREGROUND_RED   | FOREGROUND_GREEN      | FOREGROUND_BLUE
@@ -23,5 +24,7 @@ extern position_parameters_t positionParameters;
 extern loading_parameters_t loadingParameters;
 extern char dataMsg[POSITION_MSG_LENGHT];
 extern char ackMsg[ACK_MSG_LENGHT];
+extern wchar_t* ITEM_IDS[];
+extern bool SHOULD_WRITE;
 
 #endif

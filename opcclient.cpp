@@ -1,35 +1,19 @@
 #include "opcclient.h"
 
-// Global variables
-
 // The OPC DA Spec requires that some constants be registered in order to use
 // them. The one below refers to the OPC DA 1.0 IDataObject interface.
 UINT OPC_DATA_TIME = RegisterClipboardFormat(_T("OPCSTMFORMATDATATIME"));
-
-const int items_quantity = 4;
-const wchar_t* ITEM_IDS[items_quantity] = { L"Saw-toothed Waves.Real4", L"Random.UInt1", L"Random.UInt2", L"Random.UInt4" };
-OPCHANDLE H_ITEMS_HANDLE[items_quantity] = {NULL, NULL, NULL, NULL};
-//IOPCItemMgt* H_ITEMS_MGT[items_quantity] = { NULL, NULL, NULL, NULL };
-wchar_t ITEM_ID_SAW_TOOTHED[] = L"Saw-toothed Waves.Real4";
-wchar_t ITEM_ID_SAW_RANDOM_INT_1[] = L"Random.UInt1";
-wchar_t ITEM_ID_SAW_RANDOM_INT_2[] = L"Random.UInt2";
-wchar_t ITEM_ID_SAW_RANDOM_INT_4[] = L"Random.UInt4";
+OPCHANDLE H_ITEMS_READ_HANDLE[ITEMS_QUANTITY] = { NULL, NULL, NULL, NULL, NULL, NULL };
+IOPCServer* pIOPCServer = NULL;   //pointer to IOPServer interface
+IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
+OPCHANDLE hServerGroup; // server handle to the group
 
 
 void __cdecl opcClient(void) {
-	//do {
-		//printf("\n\t[CLIENT] Testando!!!\n\n");
-		//Sleep(2000);
-		IOPCServer* pIOPCServer = NULL;   //pointer to IOPServer interface
-		IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
-
-		OPCHANDLE hServerGroup; // server handle to the group
-
 		int i;
-		int j;
+		char buf[100];
 		int bRet;
 		MSG msg;
-		DWORD ticks1, ticks2;
 
 		// Have to be done before using microsoft COM library:
 		printf("[OPCCLIENT] Initializing the COM environment...\n");
@@ -47,22 +31,6 @@ void __cdecl opcClient(void) {
 		// Add the OPC items. First we have to convert from wchar_t* to char*
 		// in order to print the item name in the console.
 		AddInitialItems(pIOPCItemMgt);
-		
-
-		//Synchronous read of the device큦 item value.
-		//VARIANT varValue; //to store the read value
-		//VariantInit(&varValue);
-		//printf("[OPCCLIENT] Reading synchronously during 10 seconds...\n");
-
-		//for (i = 0; i < items_quantity; i++) {
-		//	for (j = 0; j < 5; j++) {
-		//		ReadItems(pIOPCItemMgt, H_ITEMS_HANDLE[i], varValue);
-		//		// print the read value:
-		//		printf("[OPCCLIENT] Read value: %6.2f\n", varValue.fltVal);
-		//		// wait 1 second
-		//		Sleep(1000);
-		//	}
-		//}
 
 		// Establish a callback asynchronous read by means of the IOPCDaraCallback
 		// (OPC DA 2.0) method. We first instantiate a new SOCDataCallback object and
@@ -81,21 +49,24 @@ void __cdecl opcClient(void) {
 		printf("[OPCCLIENT] Changing the group state to ACTIVE...\n");
 		SetGroupActive(pIOPCItemMgt);
 
-		// Enter again a message pump in order to process the server큦 callback
-		// notifications, for the same reason explained before.
-
-		ticks1 = GetTickCount();
-		printf("[OPCCLIENT] Waiting for IOPCDataCallback notifications during 10 seconds...\n");
+		// Enter in the process reading items loop	
 		do {
+			printf("[OPCCLIENT] Reading items values asynchrounously\n");
 			bRet = GetMessage(&msg, NULL, 0, 0);
 			if (!bRet) {
 				printf("[OPCCLIENT] Failed to get windows message! Error code = %d\n", GetLastError());
 				exit(0);
 			}
 			TranslateMessage(&msg); // This call is not really needed ...
-			DispatchMessage(&msg);  // ... but this one is!
-			ticks2 = GetTickCount();
-		} while ((ticks2 - ticks1) < 5000);
+			DispatchMessage(&msg);
+
+			Sleep(1000);
+
+			if (SHOULD_WRITE) {
+
+				SHOULD_WRITE = false;
+			}
+		} while (1);
 
 		// Cancel the callback and release its reference
 		printf("[OPCCLIENT] Cancelling the IOPCDataCallback notifications...\n");
@@ -104,9 +75,9 @@ void __cdecl opcClient(void) {
 		pSOCDataCallback->Release();
 
 		// Remove the OPC item:
-		for (i = 0; i < items_quantity; i++) {
+		for (i = 0; i < ITEMS_QUANTITY; i++) {
 			printf("[OPCCLIENT] Removing the OPC item...\n");
-			RemoveItem(pIOPCItemMgt, H_ITEMS_HANDLE[i]);
+			RemoveItem(pIOPCItemMgt, H_ITEMS_READ_HANDLE[i]);
 		}
 
 		// Remove the OPC group:
@@ -121,90 +92,19 @@ void __cdecl opcClient(void) {
 		//close the COM library:
 		printf("[OPCCLIENT] Releasing the COM environment...\n");
 		CoUninitialize();
-	/*} while (1);*/
 }
 
 void AddInitialItems(IOPCItemMgt* pIOPCItemMgt) {
 	int i;
 	char buf[100];
-	for (i = 0; i < items_quantity; i++) {
+	for (i = 0; i < ITEMS_QUANTITY; i++) {
 		size_t m;
 		wcstombs_s(&m, buf, 100, ITEM_IDS[i], _TRUNCATE);
-		printf("[OPCCLIENT] Adding the item %s to the group...\n", buf);
-		AddTheItem(pIOPCItemMgt, H_ITEMS_HANDLE[i], i);
+		printf("[OPCCLIENT] ITEM %i - Adding the item %s\n", i, buf);
+		AddTheItem(pIOPCItemMgt, H_ITEMS_READ_HANDLE[i], i);
 	}
 }
 
-
-void method() {
-	IOPCServer* pIOPCServer = NULL;   //pointer to IOPServer interface
-	IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
-
-	OPCHANDLE hServerGroup; // server handle to the group
-	OPCHANDLE hServerItem;  // server handle to the item
-
-	int i;
-	char buf[100];
-
-
-	// Establish a callback asynchronous read by means of the old IAdviseSink()
-	// (OPC DA 1.0) method. We first instantiate a new SOCAdviseSink object and
-	// adjusts its reference count, and then call a wrapper function to
-	// setup the callback.
-	IDataObject* pIDataObject = NULL; //pointer to IDataObject interface
-	DWORD tkAsyncConnection = 0;
-	SOCAdviseSink* pSOCAdviseSink = new SOCAdviseSink();
-	pSOCAdviseSink->AddRef();
-	printf("Setting up the IAdviseSink callback connection...\n");
-	SetAdviseSink(pIOPCItemMgt, pSOCAdviseSink, pIDataObject, &tkAsyncConnection);
-
-	// Change the group to the ACTIVE state so that we can receive the
-	// server큦 callback notification
-	printf("Changing the group state to ACTIVE...\n");
-	SetGroupActive(pIOPCItemMgt);
-
-	// Enters a message pump in order to process the server큦 callback
-	// notifications. This is needed because the CoInitialize() function
-	// forces the COM threading model to STA (Single Threaded Apartment),
-	// in which, according to the MSDN, "all method calls to a COM object
-	// (...) are synchronized with the windows message queue for the
-	// single-threaded apartment's thread." So, even being a console
-	// application, the OPC client must process messages (which in this case
-	// are only useless WM_USER [0x0400] messages) in order to process
-	// incoming callbacks from a OPC server.
-	//
-	// A better alternative could be to use the CoInitializeEx() function,
-	// which allows one to  specifiy the desired COM threading model;
-	// in particular, calling
-	//        CoInitializeEx(NULL, COINIT_MULTITHREADED)
-	// sets the model to MTA (MultiThreaded Apartments) in which a message
-	// loop is __not required__ since objects in this model are able to
-	// receive method calls from other threads at any time. However, in the
-	// MTA model the user is required to handle any aspects regarding
-	// concurrency, since asynchronous, multiple calls to the object methods
-	// can occur.
-	//
-	int bRet;
-	MSG msg;
-	DWORD ticks1, ticks2;
-	ticks1 = GetTickCount();
-	printf("Waiting for IAdviseSink callback notifications during 10 seconds...\n");
-	do {
-		bRet = GetMessage(&msg, NULL, 0, 0);
-		if (!bRet) {
-			printf("Failed to get windows message! Error code = %d\n", GetLastError());
-			exit(0);
-		}
-		TranslateMessage(&msg); // This call is not really needed ...
-		DispatchMessage(&msg);  // ... but this one is!
-		ticks2 = GetTickCount();
-	} while ((ticks2 - ticks1) < 10000);
-
-	// Cancel the callback and release its reference
-	printf("Cancelling the IAdviseSink callback...\n");
-	CancelAdviseSink(pIDataObject, tkAsyncConnection);
-	pSOCAdviseSink->Release();
-}
 
 ////////////////////////////////////////////////////////////////////
 // Instantiate the IOPCServer interface of the OPCServer
@@ -290,7 +190,7 @@ void AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem, int index)
 			/*szAccessPath*/ L"",
 			/*szItemID*/ LPWSTR(ITEM_IDS[index]),
 			/*bActive*/ TRUE,
-			/*hClient*/ 1,
+			/*hClient*/ index,
 			/*dwBlobSize*/ 0,
 			/*pBlob*/ NULL,
 			/*vtRequestedDataType*/ VT,

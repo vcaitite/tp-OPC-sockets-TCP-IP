@@ -8,6 +8,7 @@
 //
 
 #include <stdio.h>
+#include "global_variables.h"
 #include "SOCDataCallback.h"
 #include "SOCWrapperFunctions.h"
 
@@ -126,9 +127,29 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 		// a few OPC data types are supported.
 		VARIANT item = pvValues[dwItem];
 		status = VarToStr(item, buffer);
-		OPCHANDLE pItem = phClientItems[dwItem];
+		int pItem = phClientItems[dwItem];
 		if (status){
-			printf("Data callback: Value = %s", buffer);
+
+			if (pItem == 0) {
+				positionParameters.wagonSpeed = item.intVal;
+			}
+			else if (pItem == 1)
+			{
+				positionParameters.startSensorStatus = item.intVal;
+			}
+			else if (pItem == 2)
+			{
+				positionParameters.load_weight = item.fltVal;
+			}
+			else if (pItem == 3)
+			{
+				positionParameters.wagonSpeed = item.intVal;
+			}
+			else {
+				continue;
+			}
+
+			printf("[OPCCLIENT] ITEM %i: Value = %s", pItem, buffer);
 			quality = pwQualities [dwItem] & OPC_QUALITY_MASK;
 			if (quality == OPC_QUALITY_GOOD)
 				printf(" Quality: good");

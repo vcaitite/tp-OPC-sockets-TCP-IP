@@ -33,6 +33,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		return &dataMsg[0];
 		break;
 	case 99:
+		SHOULD_WRITE = true;
 		SetConsoleTextAttribute(handle, ORANGE);
 		printf("\t-> Parametros de carregamento recebidoss!");
 		SetConsoleTextAttribute(handle, WHITE);

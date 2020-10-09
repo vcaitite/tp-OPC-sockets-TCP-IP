@@ -16,6 +16,7 @@
 #include <iostream>
 #include <ObjIdl.h>
 
+#include "global_variables.h"
 #include "opcda.h"
 #include "opcerror.h"
 #include "SOCAdviseSink.h"

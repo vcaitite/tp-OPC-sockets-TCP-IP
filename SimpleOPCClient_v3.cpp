@@ -15,9 +15,9 @@ int main(void)
 
 	printf("\n\n\t\t\t\t Trabalho Pratico sobre OPC e Socket TCP/IP by Vitor & Joao\n");
 	std::thread socket_server(socketServer);
-	std::thread opc_client(opcClient);
+	std::thread opc_client_reader(opcClient);
 	// Teste Git - adiciona comentário
 	socket_server.join();
-	opc_client.join();
+	opc_client_reader.join();
 	return 1;
 }
