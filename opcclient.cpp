@@ -62,8 +62,19 @@ void __cdecl opcClient(void) {
 
 			Sleep(1000);
 
-			if (SHOULD_WRITE) {
+			if (true) {
+				//Synchronous read of the device´s item value.
+				VARIANT varValue; //to store the read value
+				VariantInit(&varValue);
+				varValue.fltVal = 15.55;
 
+				VARIANT returnTestValue; //to store the read value
+				VariantInit(&returnTestValue);
+
+				printf("Reading synchronously during 10 seconds...\n");
+				OPCHANDLE temp_list[] = { H_ITEMS_READ_HANDLE[5] };
+				WriteItem(pIOPCItemMgt, 1, temp_list, &varValue, returnTestValue);
+				printf("------------ TRY TO PROCESS WRITE: %6.2f \n", returnTestValue.fltVal);
 				SHOULD_WRITE = false;
 			}
 		} while (1);
@@ -92,6 +103,38 @@ void __cdecl opcClient(void) {
 		//close the COM library:
 		printf("[OPCCLIENT] Releasing the COM environment...\n");
 		CoUninitialize();
+}
+
+void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE * hServerItem, VARIANT* varValue, VARIANT& returnTestValue)
+{
+	// value of the item:
+	OPCITEMSTATE* pValue = NULL;
+
+	//get a pointer to the IOPCSyncIOInterface:
+	IOPCSyncIO* pIOPCSyncIO;
+	pGroupIUnknown->QueryInterface(__uuidof(pIOPCSyncIO), (void**)&pIOPCSyncIO);
+
+	// read the item value from the device:
+	HRESULT* pErrors = NULL; //to store error code(s)
+	HRESULT hr = pIOPCSyncIO->Write(dwCount, hServerItem, varValue, &pErrors);
+	/*_ASSERT(!hr);
+	_ASSERT(pValue != NULL);*/
+
+	// read the item value from the device:
+	HRESULT* pErrors2 = NULL; //to store error code(s)
+	HRESULT hrr = pIOPCSyncIO->Read(OPC_DS_DEVICE, 1, hServerItem, &pValue, &pErrors2);
+	_ASSERT(!hrr);
+	_ASSERT(pValue != NULL);
+	returnTestValue = pValue[0].vDataValue;
+	//Release memeory allocated by the OPC server:
+	CoTaskMemFree(pErrors);
+	pErrors = NULL;
+
+	CoTaskMemFree(pValue);
+	pValue = NULL;
+
+	// release the reference to the IOPCSyncIO interface:
+	pIOPCSyncIO->Release();
 }
 
 void AddInitialItems(IOPCItemMgt* pIOPCItemMgt) {
@@ -159,7 +202,7 @@ void AddTheGroup(IOPCServer* pIOPCServer, IOPCItemMgt*& pIOPCItemMgt,
 	OPCHANDLE hClientGroup = 0;
 
 	// Add an OPC group and get a pointer to the IUnknown I/F:
-	HRESULT hr = pIOPCServer->AddGroup(/*szName*/ L"Group2",
+	HRESULT hr = pIOPCServer->AddGroup(/*szName*/ L"GroupTeste",
 		/*bActive*/ FALSE,
 		/*dwRequestedUpdateRate*/ 1000,
 		/*hClientGroup*/ hClientGroup,
@@ -200,7 +243,6 @@ void AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem, int index)
 	//Add Result:
 	OPCITEMRESULT* pAddResult = NULL;
 	HRESULT* pErrors = NULL;
-
 	// Add an Item to the previous Group:
 	hr = pIOPCItemMgt->AddItems(1, ItemArray, &pAddResult, &pErrors);
 	if (hr != S_OK) {
