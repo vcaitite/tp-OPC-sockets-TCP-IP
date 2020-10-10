@@ -113,8 +113,9 @@ void __cdecl opcClient(void) {
 			// Check if should write the variable on the OPC server
 			if (SHOULD_WRITE) {
 				//Synchronous read of the device´s item value.
+				mtx.lock();
 				SetConsoleTextAttribute(handle, VIOLET);
-				printf("\t# [OPCCLIENT] WRITING LOADING PARAMETERS ON OPC SERVER:\n");
+				printf("\n\n\t# [OPCCLIENT] WRITING LOADING PARAMETERS ON OPC SERVER:\n");
 				SetConsoleTextAttribute(handle, WHITE);
 				VARIANT varValue; //to store the read value
 
@@ -132,6 +133,7 @@ void __cdecl opcClient(void) {
 				SetConsoleTextAttribute(handle, VIOLET);
 				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %7.2f\n\n", 5, varValue.fltVal);
 				SetConsoleTextAttribute(handle, WHITE);
+				mtx.unlock();
 				SHOULD_WRITE = false;
 			}
 		} while (1);

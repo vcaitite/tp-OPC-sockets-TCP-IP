@@ -34,6 +34,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		break;
 	case 99:
 		SHOULD_WRITE = true;
+		mtx.lock();
 		SetConsoleTextAttribute(handle, ORANGE);
 		printf("\n\t[SOCKETSERVER] -> Parametros de carregamento recebidos!");
 		//SetConsoleTextAttribute(handle, WHITE);
@@ -45,6 +46,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		// Escrevendo dados na mensagem: 
 		snprintf(bufInt, 6, "%05d", ++countMessages);
 		memcpy(&ackMsg[3], bufInt, 5);
+		mtx.unlock();
 		return ackMsg;
 		break;
 	default:
