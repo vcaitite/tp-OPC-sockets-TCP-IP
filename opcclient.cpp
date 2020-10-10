@@ -38,7 +38,7 @@ void __cdecl opcClient(void) {
 		char buf[100];
 		int bRet;
 		MSG msg;
-
+		mtx.lock();
 		// Have to be done before using microsoft COM library:
 		printf("[OPCCLIENT] Initializing the COM environment...\n");
 		CoInitialize(NULL);
@@ -72,7 +72,7 @@ void __cdecl opcClient(void) {
 		// server´s callback notification
 		printf("[OPCCLIENT] Changing the group state to ACTIVE...\n");
 		SetGroupActive(pIOPCItemMgt);
-
+		mtx.unlock();
 		// Enter in the process reading items loop	
 		do {
 			printf("[OPCCLIENT] Reading items values asynchrounously\n");

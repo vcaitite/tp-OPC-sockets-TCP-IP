@@ -11,6 +11,7 @@
 
 void __cdecl socketServer(void)
 {
+    mtx.lock();
     HANDLE handle;
     // Obtém handle para a saída da console
     handle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -97,6 +98,7 @@ void __cdecl socketServer(void)
     }
     printf("\t\t\t\t\t\t[+] Sucesso!\n");
 
+    mtx.unlock();
     printf("\t-> Aguardando conexoes! accept()...");
     // Aceitando um cliente socket
     ClientSocket = accept(ListenSocket, NULL, NULL);
@@ -111,6 +113,7 @@ void __cdecl socketServer(void)
     //closesocket(ListenSocket);
 
     printf("\n\t[+] Servidor pronto para receber dados!!!\n\n");
+    
     // Recebe ate o cliente encerrar a conexao
     char* sendMsg;
     do {

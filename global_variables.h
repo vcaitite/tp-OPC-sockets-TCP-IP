@@ -4,6 +4,10 @@
 
 #include "data_types.h"
 #include "msg_treatment.h"
+#include <thread>         // std::thread
+#include <mutex>          // std::mutex
+
+
 
 #define POSITION_MSG_LENGHT 35
 #define LOADING_PARAMETERS_MSG_LENGHT 23
@@ -26,5 +30,7 @@ extern char dataMsg[POSITION_MSG_LENGHT];
 extern char ackMsg[ACK_MSG_LENGHT];
 extern wchar_t* ITEM_IDS[];
 extern bool SHOULD_WRITE;
+extern std::mutex mtx;           // mutex for critical section
+
 
 #endif

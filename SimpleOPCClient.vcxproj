@@ -14,7 +14,7 @@
     <ProjectGuid>{6C614B07-E2D4-407A-BB8C-CA292AB68C92}</ProjectGuid>
     <RootNamespace>SimpleOPCClient</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>tp1_sistemas_distribuidos</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
