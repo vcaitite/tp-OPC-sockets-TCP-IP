@@ -24,10 +24,9 @@ int main(void)
 	
 	printf("\n\n\t\t\t\t Trabalho Pratico sobre OPC e Socket TCP/IP by Vitor & Joao\n");
 	// Define and start socket server and opc client processes
-	//printf("\n\tCONFIGURING SOCKET SERVER ...\n");
 	std::thread socket_server(socketServer);
 
-	//Sleep(1000)
+	Sleep(100);
 	//printf("\n\tCONFIGURING OPC CLIENT SERVER ...\n");
 	std::thread opc_client_reader(opcClient);
 
