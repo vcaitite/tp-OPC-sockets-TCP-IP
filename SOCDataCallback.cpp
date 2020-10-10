@@ -7,6 +7,14 @@
 // Luiz T. S. Mendes - DELT/UFMG - 13 Sept 2011
 //
 
+/*
+* Modifications on this file:
+* - Modified the 'SOCDataCallback::OnDataChange(..)' method so it could be able to read and identify the desired
+* OPC items, saving it on the defined global struct and printing the values for each item.
+* 
+* (by: João P. A. Ferreira and Vitor G. R. Caitité)
+*/
+
 #include <stdio.h>
 #include "global_variables.h"
 #include "SOCDataCallback.h"
