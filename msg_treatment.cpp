@@ -15,8 +15,8 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		dataMsg[1] = '5';
 		dataMsg[2] = '|';
 		SetConsoleTextAttribute(handle, HLBLUE);
-		printf("\t-> Mensagem de solicitacao de dados recebida!");
-		SetConsoleTextAttribute(handle, WHITE);
+		printf("\n\t[SOCKETSERVER] -> Mensagem de solicitacao de dados recebida!");
+		//SetConsoleTextAttribute(handle, WHITE);
 		char bufInt[6];
 		snprintf(bufInt, 6, "%05d", ++countMessages);
 		memcpy(&dataMsg[3], bufInt, 5);
@@ -35,13 +35,13 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 	case 99:
 		SHOULD_WRITE = true;
 		SetConsoleTextAttribute(handle, ORANGE);
-		printf("\t-> Parametros de carregamento recebidoss!");
-		SetConsoleTextAttribute(handle, WHITE);
+		printf("\n\t[SOCKETSERVER] -> Parametros de carregamento recebidos!");
+		//SetConsoleTextAttribute(handle, WHITE);
 		// Lendo dados:
 		sscanf_s(&recvbuf[9], "%5d", &loadingParameters.openTime);
 		sscanf_s(&recvbuf[15], "%7f", &loadingParameters.oreQuantity);
 		printf("\n\t* Tempo de abertura da comporta do silo: %d seg.", loadingParameters.openTime);
-		printf("\n\t* Quantidade de minerio a carregar: %7.2f kg", loadingParameters.oreQuantity);
+		printf("\n\t* Quantidade de minerio a carregar: %7.2f kg.\t\t", loadingParameters.oreQuantity);
 		// Escrevendo dados na mensagem: 
 		snprintf(bufInt, 6, "%05d", ++countMessages);
 		memcpy(&ackMsg[3], bufInt, 5);
@@ -51,7 +51,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		SetConsoleTextAttribute(handle, HLRED);
 		printf("\tMensagem não reconhecida!\n");
 		SetConsoleTextAttribute(handle, WHITE);
-		//return NULL;
+		return NULL;
 		break;
 	}
 }

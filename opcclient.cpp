@@ -101,9 +101,9 @@ void __cdecl opcClient(void) {
 		mtx.unlock();
 		// Enter in the process reading items loop	
 		do {
-			printf("\t# [OPCCLIENT] Reading items values asynchrounously\n");
 			bRet = GetMessage(&msg, NULL, 0, 0);
 			if (!bRet) {
+				SetConsoleTextAttribute(handle, HLRED);
 				printf("\t# [OPCCLIENT] Failed to get windows message! Error code = %d\n", GetLastError());
 				exit(0);
 			}
@@ -125,8 +125,8 @@ void __cdecl opcClient(void) {
 				varValue.fltVal = loadingParameters.oreQuantity;
 				varValue.vt = VT_R4;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue);
-				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i", 5, varValue.fltVal);
-
+				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i\n\n", 5, varValue.fltVal);
+				SetConsoleTextAttribute(handle, WHITE);
 				SHOULD_WRITE = false;
 			}
 		} while (1);

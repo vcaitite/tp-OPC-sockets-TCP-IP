@@ -16,7 +16,7 @@ void __cdecl socketServer(void)
     // Obtém handle para a saída da console
     handle = GetStdHandle(STD_OUTPUT_HANDLE);
     if (handle == INVALID_HANDLE_VALUE) {
-        printf("Erro ao obter o handle para saida da console\n");
+        printf("\n\tError getting the identifier for the console\n");
     }
     SetConsoleTextAttribute(handle, WHITE);
     WSADATA wsaData;
@@ -120,46 +120,58 @@ void __cdecl socketServer(void)
     
     // Recebe ate o cliente encerrar a conexao
     char* sendMsg;
+    char received[50];
     do {
         //printf("\t-> Aguardando...");
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         if (iResult > 0) {
             if (!check_sequencial_number(recvbuf)) {
                 SetConsoleTextAttribute(handle, HLRED);
-                printf("\t\t\t\t\t[-] numero sequencial invalido\n");
+                printf("\t\t\t\t\t[-] Invalid sequential number\n");
                 SetConsoleTextAttribute(handle, WHITE);
                 closesocket(ClientSocket);
                 WSACleanup();
             }
             sendMsg = socketMsgTreatment(recvbuf, recvbuflen);
-            //printf("Send: %s", sendMsg);
-            SetConsoleTextAttribute(handle, WHITE);
-            printf("\t\t[+] Bytes recebidos: %d\n\n", iResult);
-            SetConsoleTextAttribute(handle, WHITE);
+            if (sendMsg != NULL) {
+                printf("\t[+] Bytes recebidos: %d\n", iResult);
+                memcpy(&received[0], &recvbuf[0], iResult);
+                received[iResult] = '\0';
+                printf("\t # Received: %s\n\n", received);
+                SetConsoleTextAttribute(handle, WHITE);
 
-            if (iResult == 8) {
-                SetConsoleTextAttribute(handle, HLGREEN);
-                printf("\t<- Enviando msg de posicionamento do vagao...");
-                SetConsoleTextAttribute(handle, WHITE);
-                iSendResult = send(ClientSocket, &sendMsg[0], (POSITION_MSG_LENGHT - 1), 0);
+                if (iResult == 8) {
+                    SetConsoleTextAttribute(handle, HLGREEN);
+                    printf("\t[SOCKETSERVER] <- Enviando msg de posicionamento do vagao...");
+                    //SetConsoleTextAttribute(handle, WHITE);
+                    iSendResult = send(ClientSocket, &sendMsg[0], (POSITION_MSG_LENGHT - 1), 0);
+                }
+                else if (iResult == 22) {
+                    SetConsoleTextAttribute(handle, HLGREEN);
+                    printf("\t[SOCKETSERVER] <- Enviando msg de ACK ao cliente TCP/IP...");
+                    //SetConsoleTextAttribute(handle, WHITE);
+                    iSendResult = send(ClientSocket, &sendMsg[0], (ACK_MSG_LENGHT - 1), 0);
+                }
+                if (iSendResult == SOCKET_ERROR) {
+                    SetConsoleTextAttribute(handle, HLRED);
+                    printf("\t[-] send() falhou! Erro: %d\n", WSAGetLastError());
+                    SetConsoleTextAttribute(handle, WHITE);
+                    closesocket(ClientSocket);
+                    WSACleanup();
+                    return;
+                }
+                else{
+                    printf("\t[+] Sucesso! Bytes enviados: %d\n", iSendResult);
+                    printf("\t # Message sent: %s\n\n", sendMsg);
+                    SetConsoleTextAttribute(handle, WHITE);
+                }
+
             }
-            else if (iResult == 22) {
-                SetConsoleTextAttribute(handle, HLGREEN);
-                printf("\t<- Enviando msg de ACK ao cliente TCP/IP...");
-                SetConsoleTextAttribute(handle, WHITE);
-                iSendResult = send(ClientSocket, &sendMsg[0], (ACK_MSG_LENGHT - 1), 0);
-            }
-            if (iSendResult == SOCKET_ERROR) {
+            else {
                 SetConsoleTextAttribute(handle, HLRED);
-                printf("\t\t\t[-] send() falhou! Erro: %d\n", WSAGetLastError());
+                printf("\t\t[-] Invalid message!\n");
                 SetConsoleTextAttribute(handle, WHITE);
-                closesocket(ClientSocket);
-                WSACleanup();
-                return;
             }
-            SetConsoleTextAttribute(handle, WHITE);
-            printf("\t\t[+] Sucesso! Bytes enviados: %d\n\n", iSendResult);
-            SetConsoleTextAttribute(handle, WHITE);
         }
         else if (iResult == 0) {
             SetConsoleTextAttribute(handle, HLRED);
