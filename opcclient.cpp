@@ -60,21 +60,21 @@ void __cdecl opcClient(void) {
 			TranslateMessage(&msg); // This call is not really needed ...
 			DispatchMessage(&msg);
 
-			Sleep(1000);
-
-			if (true) {
+			// Check if should write the variable on the OPC server
+			if (SHOULD_WRITE) {
 				//Synchronous read of the device´s item value.
 				VARIANT varValue; //to store the read value
-				VariantInit(&varValue);
-				varValue.intVal = 15;
 
+				// Define the int1 value to write
+				varValue.intVal = loadingParameters.openTime;
+				varValue.vt = VT_I1;
+				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
 
-				VARIANT returnTestValue; //to store the read value
-				VariantInit(&returnTestValue);
+				// Define the real4 value to write
+				varValue.fltVal = loadingParameters.oreQuantity;
+				varValue.vt = VT_R4;
+				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
 
-				//OPCHANDLE temp_list[] = { H_ITEMS_READ_HANDLE[5] };
-				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue, returnTestValue);
-				printf("------------ TRY TO PROCESS WRITE: %6.2f \n", returnTestValue.fltVal);
 				SHOULD_WRITE = false;
 			}
 		} while (1);
@@ -105,11 +105,8 @@ void __cdecl opcClient(void) {
 		CoUninitialize();
 }
 
-void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE hServerItem, VARIANT &varValue, VARIANT& returnTestValue)
+void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE hServerItem, VARIANT &varValue)
 {
-	// value of the item:
-	OPCITEMSTATE* pValue = NULL;
-
 	//get a pointer to the IOPCSyncIOInterface:
 	IOPCSyncIO* pIOPCSyncIO;
 	pGroupIUnknown->QueryInterface(__uuidof(pIOPCSyncIO), (void**)&pIOPCSyncIO);
@@ -117,21 +114,10 @@ void WriteItem(IUnknown* pGroupIUnknown, DWORD dwCount, OPCHANDLE hServerItem, V
 	// read the item value from the device:
 	HRESULT* pErrors = NULL; //to store error code(s)
 	HRESULT hr = pIOPCSyncIO->Write(dwCount, &hServerItem, &varValue, &pErrors);
-	/*_ASSERT(!hr);
-	_ASSERT(pValue != NULL);*/
+	_ASSERT(!hr);
 
-	// read the item value from the device:
-	HRESULT* pErrors2 = NULL; //to store error code(s)
-	HRESULT hrr = pIOPCSyncIO->Read(OPC_DS_DEVICE, 1, &hServerItem, &pValue, &pErrors2);
-	_ASSERT(!hrr);
-	_ASSERT(pValue != NULL);
-	returnTestValue = pValue[0].vDataValue;
-	//Release memeory allocated by the OPC server:
 	CoTaskMemFree(pErrors);
 	pErrors = NULL;
-
-	CoTaskMemFree(pValue);
-	pValue = NULL;
 
 	// release the reference to the IOPCSyncIO interface:
 	pIOPCSyncIO->Release();
