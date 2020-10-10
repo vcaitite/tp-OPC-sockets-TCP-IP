@@ -139,19 +139,23 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 		if (status){
 
 			if (pItem == 0) {
-				positionParameters.wagonSpeed = item.intVal;
+				positionParameters.wagonSpeed = (int) item.fltVal;
+				printf("[OPCCLIENT] Print WAGON SPEED %i:", positionParameters.wagonSpeed);
 			}
 			else if (pItem == 1)
 			{
-				positionParameters.startSensorStatus = item.intVal;
+				positionParameters.startSensorStatus = (int) item.fltVal;
+				printf("[OPCCLIENT] Print WAGON SPEED %i:", positionParameters.startSensorStatus);
 			}
 			else if (pItem == 2)
 			{
-				positionParameters.load_weight = item.fltVal;
+				positionParameters.endSensorStatus = (int) item.fltVal;
+				printf("[OPCCLIENT] Print WAGON SPEED %i:", positionParameters.endSensorStatus);
 			}
 			else if (pItem == 3)
 			{
-				positionParameters.wagonSpeed = item.intVal;
+				positionParameters.load_weight = item.fltVal;
+				printf("[OPCCLIENT] Print WAGON SPEED %6.2f:", positionParameters.load_weight);
 			}
 			else {
 				continue;

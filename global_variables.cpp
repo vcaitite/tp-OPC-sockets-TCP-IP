@@ -8,4 +8,4 @@ char ackMsg[ACK_MSG_LENGHT] = "00|NNNNN";
 
 bool SHOULD_WRITE = false;
 int seq_number = 0;
-wchar_t* ITEM_IDS[ITEMS_QUANTITY] = { L"Saw-toothed Waves.Real4", L"Random.UInt1", L"Random.UInt2", L"Random.UInt4", L"Bucket Brigade.UInt1", L"Bucket Brigade.Real4" };
+wchar_t* ITEM_IDS[ITEMS_QUANTITY] = { L"Random.UInt1", L"Random.UInt2", L"Random.UInt4", L"Saw-toothed Waves.Real4", L"Bucket Brigade.UInt1", L"Bucket Brigade.Real4" };

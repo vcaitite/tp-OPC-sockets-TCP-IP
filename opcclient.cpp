@@ -96,7 +96,7 @@ void __cdecl opcClient(void) {
 				// Define the real4 value to write
 				varValue.fltVal = loadingParameters.oreQuantity;
 				varValue.vt = VT_R4;
-				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
+				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue);
 
 				SHOULD_WRITE = false;
 			}
