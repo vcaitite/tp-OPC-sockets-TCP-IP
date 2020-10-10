@@ -113,19 +113,24 @@ void __cdecl opcClient(void) {
 			// Check if should write the variable on the OPC server
 			if (SHOULD_WRITE) {
 				//Synchronous read of the device´s item value.
+				SetConsoleTextAttribute(handle, VIOLET);
+				printf("\t# [OPCCLIENT] WRITING LOADING PARAMETERS ON OPC SERVER:\n");
+				SetConsoleTextAttribute(handle, WHITE);
 				VARIANT varValue; //to store the read value
 
 				// Define the int1 value to write
 				varValue.intVal = loadingParameters.openTime;
 				varValue.vt = VT_I1;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
-				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i", 4, varValue.intVal);
-
+				SetConsoleTextAttribute(handle, VIOLET);
+				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i\n", 4, varValue.intVal);
+				SetConsoleTextAttribute(handle, WHITE);
 				// Define the real4 value to write
 				varValue.fltVal = loadingParameters.oreQuantity;
 				varValue.vt = VT_R4;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue);
-				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i\n\n", 5, varValue.fltVal);
+				SetConsoleTextAttribute(handle, VIOLET);
+				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %7.2f\n\n", 5, varValue.fltVal);
 				SetConsoleTextAttribute(handle, WHITE);
 				SHOULD_WRITE = false;
 			}
