@@ -21,9 +21,6 @@
     <ClCompile Include="SimpleOPCClient_v3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SOCAdviseSink.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SOCDataCallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -48,9 +45,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="opcerror.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SOCAdviseSink.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SOCDataCallback.h">
