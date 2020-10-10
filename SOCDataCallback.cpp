@@ -140,28 +140,24 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 
 			if (pItem == 0) {
 				positionParameters.wagonSpeed = (int) item.fltVal;
-				printf("[OPCCLIENT] Print WAGON SPEED %i:", positionParameters.wagonSpeed);
 			}
 			else if (pItem == 1)
 			{
 				positionParameters.startSensorStatus = (int) item.fltVal;
-				printf("[OPCCLIENT] Print WAGON SPEED %i:", positionParameters.startSensorStatus);
 			}
 			else if (pItem == 2)
 			{
 				positionParameters.endSensorStatus = (int) item.fltVal;
-				printf("[OPCCLIENT] Print WAGON SPEED %i:", positionParameters.endSensorStatus);
 			}
 			else if (pItem == 3)
 			{
 				positionParameters.load_weight = item.fltVal;
-				printf("[OPCCLIENT] Print WAGON SPEED %6.2f:", positionParameters.load_weight);
 			}
 			else {
 				continue;
 			}
 
-			printf("[OPCCLIENT] ITEM %i: Value = %s", pItem, buffer);
+			printf("[OPCCLIENT] READ ITEM %i: Value = %s", pItem, buffer);
 			quality = pwQualities [dwItem] & OPC_QUALITY_MASK;
 			if (quality == OPC_QUALITY_GOOD)
 				printf(" Quality: good");

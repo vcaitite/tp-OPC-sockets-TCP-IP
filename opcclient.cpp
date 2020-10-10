@@ -92,11 +92,13 @@ void __cdecl opcClient(void) {
 				varValue.intVal = loadingParameters.openTime;
 				varValue.vt = VT_I1;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
+				printf("[OPCCLIENT] WRITE ITEM %i: Value = %i", 4, varValue.intVal);
 
 				// Define the real4 value to write
 				varValue.fltVal = loadingParameters.oreQuantity;
 				varValue.vt = VT_R4;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue);
+				printf("[OPCCLIENT] WRITE ITEM %i: Value = %i", 5, varValue.fltVal);
 
 				SHOULD_WRITE = false;
 			}
