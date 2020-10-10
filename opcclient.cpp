@@ -27,6 +27,7 @@
 // them. The one below refers to the OPC DA 1.0 IDataObject interface.
 UINT OPC_DATA_TIME = RegisterClipboardFormat(_T("OPCSTMFORMATDATATIME"));
 OPCHANDLE H_ITEMS_READ_HANDLE[ITEMS_QUANTITY] = { NULL, NULL, NULL, NULL, NULL, NULL };
+int ITEM_TYPES[ITEMS_QUANTITY] = { VT_UI1, VT_UI2, VT_UI4, VT_R4, VT_UI1, VT_R4 };
 IOPCServer* pIOPCServer = NULL;   //pointer to IOPServer interface
 IOPCItemMgt* pIOPCItemMgt = NULL; //pointer to IOPCItemMgt interface
 OPCHANDLE hServerGroup; // server handle to the group
@@ -247,7 +248,7 @@ void AddTheItem(IOPCItemMgt* pIOPCItemMgt, OPCHANDLE& hServerItem, int index)
 			/*hClient*/ index,
 			/*dwBlobSize*/ 0,
 			/*pBlob*/ NULL,
-			/*vtRequestedDataType*/ VT,
+			/*vtRequestedDataType*/ ITEM_TYPES[index],
 			/*wReserved*/0
 			} };
 

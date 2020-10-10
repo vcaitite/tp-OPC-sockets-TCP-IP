@@ -139,15 +139,15 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 		if (status){
 
 			if (pItem == 0) {
-				positionParameters.wagonSpeed = (int) item.fltVal;
+				positionParameters.wagonSpeed = item.uintVal;
 			}
 			else if (pItem == 1)
 			{
-				positionParameters.startSensorStatus = (int) item.fltVal;
+				positionParameters.startSensorStatus = item.uintVal;
 			}
 			else if (pItem == 2)
 			{
-				positionParameters.endSensorStatus = (int) item.fltVal;
+				positionParameters.endSensorStatus = item.uintVal;
 			}
 			else if (pItem == 3)
 			{
