@@ -134,34 +134,35 @@ void __cdecl socketServer(void)
             }
             sendMsg = socketMsgTreatment(recvbuf, recvbuflen);
             if (sendMsg != NULL) {
-                printf("\t[+] Bytes recebidos: %d\n", iResult);
+                printf("\t[+] Bytes received: %d\n", iResult);
                 memcpy(&received[0], &recvbuf[0], iResult);
-                received[iResult] = '\0';
+                if(iResult<50)
+                    received[iResult] = '\0';
                 printf("\t # Received: %s\n\n", received);
                 SetConsoleTextAttribute(handle, WHITE);
 
                 if (iResult == 8) {
                     SetConsoleTextAttribute(handle, HLGREEN);
-                    printf("\t[SOCKETSERVER] <- Enviando msg de posicionamento do vagao...");
+                    printf("\t[SOCKETSERVER] <- Sending wagon positioning message...");
                     //SetConsoleTextAttribute(handle, WHITE);
                     iSendResult = send(ClientSocket, &sendMsg[0], (POSITION_MSG_LENGHT - 1), 0);
                 }
                 else if (iResult == 22) {
                     SetConsoleTextAttribute(handle, HLGREEN);
-                    printf("\t[SOCKETSERVER] <- Enviando msg de ACK ao cliente TCP/IP...");
+                    printf("\t[SOCKETSERVER] <- Sending ACK msg to TCP / IP client...");
                     //SetConsoleTextAttribute(handle, WHITE);
                     iSendResult = send(ClientSocket, &sendMsg[0], (ACK_MSG_LENGHT - 1), 0);
                 }
                 if (iSendResult == SOCKET_ERROR) {
                     SetConsoleTextAttribute(handle, HLRED);
-                    printf("\t[-] send() falhou! Erro: %d\n", WSAGetLastError());
+                    printf("\t[-] send() failed!Error: %d\n", WSAGetLastError());
                     SetConsoleTextAttribute(handle, WHITE);
                     closesocket(ClientSocket);
                     WSACleanup();
                     return;
                 }
                 else{
-                    printf("\t[+] Sucesso! Bytes enviados: %d\n", iSendResult);
+                    printf("\t[+] Success!Bytes sent %d\n", iSendResult);
                     printf("\t # Message sent: %s\n\n", sendMsg);
                     SetConsoleTextAttribute(handle, WHITE);
                 }
@@ -175,12 +176,12 @@ void __cdecl socketServer(void)
         }
         else if (iResult == 0) {
             SetConsoleTextAttribute(handle, HLRED);
-            printf("\t\t\t\t\t[-] Conexao fexada pelo cliente!\n");
+            printf("\t\t\t\t\t[-] Connection closed by the client!\n");
             SetConsoleTextAttribute(handle, WHITE);
         }
         else {
             SetConsoleTextAttribute(handle, HLRED);
-            printf("\t\t\t\t\t[-] recv() falhou! Erro: %d\n", WSAGetLastError());
+            printf("\t\t\t\t\t[-] recv() failed! Error: %d\n", WSAGetLastError());
             SetConsoleTextAttribute(handle, WHITE);
             countMessages = 0;
             //closesocket(ClientSocket);
@@ -188,40 +189,40 @@ void __cdecl socketServer(void)
             printf("\t-> listen()...");
             iResult = listen(ListenSocket, SOMAXCONN);
             if (iResult == SOCKET_ERROR) {
-                printf("\t\t\t\t\t\t[-] listen() falhou! Erro: %d\n\n", WSAGetLastError());
+                printf("\t\t\t\t\t\t[-] listen() failed! Error: %d\n\n", WSAGetLastError());
                 closesocket(ListenSocket);
                 WSACleanup();
                 return;
             }
-            printf("\t\t\t\t\t\t[+] Sucesso!\n");
+            printf("\t\t\t\t\t\t[+] Success!\n");
 
-            printf("\t-> Aguardando conexoes! accept()...");
+            printf("\t-> Waiting for connections! accept()...");
             // Aceitando um cliente socket
             ClientSocket = accept(ListenSocket, NULL, NULL);
             if (ClientSocket == INVALID_SOCKET) {
-                printf("\t\t\t[-] accept() falhou! Erro: %d\n\n", WSAGetLastError());
+                printf("\t\t\t[-] accept() failed! Error: %d\n\n", WSAGetLastError());
                 closesocket(ListenSocket);
                 WSACleanup();
                 return;
             }
-            printf("\t\t\t[+] Sucesso!\n");
-            printf("\n\t[+] Servidor pronto para receber dados!!!\n\n");
+            printf("\t\t\t[+] Success!\n");
+            printf("\n\t[+] Server ready to receive data!!!\n\n");
             //return;
         }
 
     } while (1);
 
-    printf("\t-> Encerrando...");
+    printf("\t-> Shutting down...");
     closesocket(ListenSocket);
     // Fexando a conexao quando terminarmos
     iResult = shutdown(ClientSocket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
-        printf("\t\t\t\t\t[-] shutdown() falhou! Erro: %d\n", WSAGetLastError());
+        printf("\t\t\t\t\t[-] shutdown() failed! Error: %d\n", WSAGetLastError());
         closesocket(ClientSocket);
         WSACleanup();
         return;
     }
-    printf("\t\t\t\t\t[+] Encerrado!\n");
+    printf("\t\t\t\t\t[+] Closed!\n");
     printf("\n\n\t### Bye!!! ###\n");
     // cleanup
     closesocket(ClientSocket);
