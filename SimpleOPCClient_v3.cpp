@@ -26,8 +26,7 @@ int main(void)
 	// Define and start socket server and opc client processes
 	std::thread socket_server(socketServer);
 
-	Sleep(100);
-	//printf("\n\tCONFIGURING OPC CLIENT SERVER ...\n");
+	Sleep(50);
 	std::thread opc_client_reader(opcClient);
 
 	socket_server.join();

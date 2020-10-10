@@ -33,10 +33,10 @@ void __cdecl socketServer(void)
     int recvbuflen = DEFAULT_BUFLEN;
 
     SetConsoleTextAttribute(handle, HLRED);
-    printf("\n\t* CONFIGURING SOCKET SERVER ...\n");
+    printf("\n\t* CONFIGURING SOCKET SERVER: \n");
     SetConsoleTextAttribute(handle, WHITE);
 
-    printf("\n\t-> Initializing the Winsock library...");
+    printf("\n\t# Initializing the Winsock library...");
     /*
     *    Inicializando a biblioteca de Winsock. Se a biblioteca não for inicializada
     *    o programa encerra retornando 1.
@@ -55,7 +55,7 @@ void __cdecl socketServer(void)
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
 
-    printf("\t-> Resolving server address and port...");
+    printf("\t# Resolving server address and port...");
     // Resolvendo o endereco e porta do servidor
     iResult = getaddrinfo(NULL, DEFAULT_PORT, &hints, &result);
     if (iResult != 0) {
@@ -65,7 +65,7 @@ void __cdecl socketServer(void)
     }printf("\t\t[+] Success!\n");
 
 
-    printf("\t-> Creating SOCKET for connection...");
+    printf("\t# Creating SOCKET for connection...");
     // Criando Socket
     ListenSocket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if (ListenSocket == INVALID_SOCKET) {
@@ -76,8 +76,8 @@ void __cdecl socketServer(void)
     }
     printf("\t\t[+] Socket successfully created!\n");
 
-    printf("\n\t-> Setting TCP listening socket:\n");
-    printf("\t-> bind()...");
+    printf("\n\t# Setting TCP listening socket:\n");
+    printf("\t# bind()...");
     // Setup TCP listening socket
     iResult = bind(ListenSocket, result->ai_addr, (int)result->ai_addrlen);
     if (iResult == SOCKET_ERROR) {
@@ -91,7 +91,7 @@ void __cdecl socketServer(void)
 
     freeaddrinfo(result);
 
-    printf("\t-> listen()...");
+    printf("\t# listen()...");
     iResult = listen(ListenSocket, SOMAXCONN);
     if (iResult == SOCKET_ERROR) {
         printf("\t\t\t\t\t\t[-] listen() failed! Error: %d\n\n", WSAGetLastError());
@@ -101,8 +101,9 @@ void __cdecl socketServer(void)
     }
     printf("\t\t\t\t\t[+] Success!\n");
 
+    printf("\t# Waiting for connections!accept().\n\n");
     mtx.unlock();
-    printf("\t-> Waiting for connections!accept() ...\n\n");
+    
     // Aceitando um cliente socket
     ClientSocket = accept(ListenSocket, NULL, NULL);
     if (ClientSocket == INVALID_SOCKET) {

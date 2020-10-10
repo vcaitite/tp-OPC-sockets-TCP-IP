@@ -39,17 +39,39 @@ void __cdecl opcClient(void) {
 		int bRet;
 		MSG msg;
 		mtx.lock();
+
+		HANDLE handle;
+		// Obtém handle para a saída da console
+		handle = GetStdHandle(STD_OUTPUT_HANDLE);
+		if (handle == INVALID_HANDLE_VALUE) {
+			printf("Erro ao obter o handle para saida da console\n");
+		}
+		SetConsoleTextAttribute(handle, HLRED);
+		printf("\n\t* CONFIGURING OPC CLIENT SERVER: \n\n");
+		SetConsoleTextAttribute(handle, WHITE);
 		// Have to be done before using microsoft COM library:
-		printf("[OPCCLIENT] Initializing the COM environment...\n");
-		CoInitialize(NULL);
+		printf("\t# Initializing the COM environment...");
+		if(CoInitialize(NULL) == S_OK) {
+			printf("\t\t[+] Success!\n");
+		}
+		else {
+			printf("\t\t[-] Fail!\n");
+		}
 
 		// Let's instantiante the IOPCServer interface and get a pointer of it:
-		printf("[OPCCLIENT] Instantiating the MATRIKON OPC Server for Simulation...\n");
+		printf("\t# Instantiating the MATRIKON OPC Server...");
 		pIOPCServer = InstantiateServer(OPC_SERVER_NAME);
+		if (pIOPCServer != NULL) {
+			printf("\t[+] Success!\n");
+		}
+		else {
+			printf("\t[-] Fail!\n");
+		}
+
 
 		// Add the OPC group the OPC server and get an handle to the IOPCItemMgt
 		//interface:
-		printf("[OPCCLIENT] Adding a group in the INACTIVE state for the moment...\n");
+		printf("\n\t# Adding a group in the INACTIVE state for the moment:\n");
 		AddTheGroup(pIOPCServer, pIOPCItemMgt, hServerGroup);
 
 		// Add the OPC items. First we have to convert from wchar_t* to char*
@@ -65,20 +87,24 @@ void __cdecl opcClient(void) {
 		SOCDataCallback* pSOCDataCallback = new SOCDataCallback();
 		pSOCDataCallback->AddRef();
 
-		printf("[OPCCLIENT] Setting up the IConnectionPoint callback connection...\n");
+		printf("\n\t# [OPCCLIENT] Setting up the IConnectionPoint callback connection.\n");
 		SetDataCallback(pIOPCItemMgt, pSOCDataCallback, pIConnectionPoint, &dwCookie);
 
 		// Change the group to the ACTIVE state so that we can receive the
 		// server´s callback notification
-		printf("[OPCCLIENT] Changing the group state to ACTIVE...\n");
+		printf("\t# [OPCCLIENT] Changing the group state to ACTIVE.\n");
 		SetGroupActive(pIOPCItemMgt);
+
+		SetConsoleTextAttribute(handle, HLRED);
+		printf("\n\t**************** Finished the initialization *****************\n\n");
+		SetConsoleTextAttribute(handle, WHITE);
 		mtx.unlock();
 		// Enter in the process reading items loop	
 		do {
-			printf("[OPCCLIENT] Reading items values asynchrounously\n");
+			printf("\t# [OPCCLIENT] Reading items values asynchrounously\n");
 			bRet = GetMessage(&msg, NULL, 0, 0);
 			if (!bRet) {
-				printf("[OPCCLIENT] Failed to get windows message! Error code = %d\n", GetLastError());
+				printf("\t# [OPCCLIENT] Failed to get windows message! Error code = %d\n", GetLastError());
 				exit(0);
 			}
 			TranslateMessage(&msg); // This call is not really needed ...
@@ -93,13 +119,13 @@ void __cdecl opcClient(void) {
 				varValue.intVal = loadingParameters.openTime;
 				varValue.vt = VT_I1;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
-				printf("[OPCCLIENT] WRITE ITEM %i: Value = %i", 4, varValue.intVal);
+				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i", 4, varValue.intVal);
 
 				// Define the real4 value to write
 				varValue.fltVal = loadingParameters.oreQuantity;
 				varValue.vt = VT_R4;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue);
-				printf("[OPCCLIENT] WRITE ITEM %i: Value = %i", 5, varValue.fltVal);
+				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i", 5, varValue.fltVal);
 
 				SHOULD_WRITE = false;
 			}
@@ -113,21 +139,21 @@ void __cdecl opcClient(void) {
 
 		// Remove the OPC item:
 		for (i = 0; i < ITEMS_QUANTITY; i++) {
-			printf("[OPCCLIENT] Removing the OPC item...\n");
+			printf("\t# [OPCCLIENT] Removing the OPC item...\n");
 			RemoveItem(pIOPCItemMgt, H_ITEMS_READ_HANDLE[i]);
 		}
 
 		// Remove the OPC group:
-		printf("[OPCCLIENT] Removing the OPC group object...\n");
+		printf("\t# [OPCCLIENT] Removing the OPC group object...\n");
 		pIOPCItemMgt->Release();
 		RemoveGroup(pIOPCServer, hServerGroup);
 
 		// release the interface references:
-		printf("[OPCCLIENT] Removing the OPC server object...\n");
+		printf("\t# [OPCCLIENT] Removing the OPC server object...\n");
 		pIOPCServer->Release();
 
 		//close the COM library:
-		printf("[OPCCLIENT] Releasing the COM environment...\n");
+		printf("\t# [OPCCLIENT] Releasing the COM environment...\n");
 		CoUninitialize();
 }
 
@@ -155,7 +181,7 @@ void AddInitialItems(IOPCItemMgt* pIOPCItemMgt) {
 	for (i = 0; i < ITEMS_QUANTITY; i++) {
 		size_t m;
 		wcstombs_s(&m, buf, 100, ITEM_IDS[i], _TRUNCATE);
-		printf("[OPCCLIENT] ITEM %i - Adding the item %s\n", i, buf);
+		printf("\t# [OPCCLIENT] ITEM %i - Adding the item %s\n", i, buf);
 		AddTheItem(pIOPCItemMgt, H_ITEMS_READ_HANDLE[i], i);
 	}
 }
