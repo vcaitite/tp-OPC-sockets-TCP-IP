@@ -118,11 +118,11 @@ void __cdecl socketServer(void)
 
     printf("\n\t[+] Server ready to receive data !!!\n\n");
     
-    // Recebe ate o cliente encerrar a conexao
+    // Receive until client ends the connection
     char* sendMsg;
     char received[50];
     do {
-        //printf("\t-> Aguardando...");
+        
         iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
         if (iResult > 0) {
             if (!check_sequencial_number(recvbuf)) {

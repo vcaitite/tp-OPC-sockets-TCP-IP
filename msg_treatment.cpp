@@ -17,24 +17,33 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		SetConsoleTextAttribute(handle, HLBLUE);
 		printf("\n\t[SOCKETSERVER] -> Mensagem de solicitacao de dados recebida!");
 		//SetConsoleTextAttribute(handle, WHITE);
+		mtx_PositioningParameters.lock();
 		char bufInt[6];
 		snprintf(bufInt, 6, "%05d", ++countMessages);
 		memcpy(&dataMsg[3], bufInt, 5);
 		snprintf(bufInt, 6, "%05d", positionParameters.wagonSpeed);
 		memcpy(&dataMsg[9], bufInt, 5);
-		snprintf(bufInt, 6, "%05d", positionParameters.startSensorStatus);
+		if(positionParameters.startSensorStatus > 0)
+			snprintf(bufInt, 6, "%05d", 1);
+		else
+			snprintf(bufInt, 6, "%05d", 0);
 		memcpy(&dataMsg[15], bufInt, 5);
 		snprintf(bufInt, 6, "%05d", positionParameters.endSensorStatus);
+		if (positionParameters.endSensorStatus > 0)
+			snprintf(bufInt, 6, "%05d", 1);
+		else
+			snprintf(bufInt, 6, "%05d", 0);
 		memcpy(&dataMsg[21], bufInt, 5);
 		char bufFloat[8];
 		snprintf(bufFloat, 8, "%07.2f", positionParameters.load_weight);
 		memcpy(&dataMsg[27], bufFloat, 7);
+		mtx_PositioningParameters.unlock();
 		//printf("MSG: %s", dataMsg);
 		return &dataMsg[0];
 		break;
 	case 99:
 		SHOULD_WRITE = true;
-		mtx.lock();
+		mtx_LoadingParameters.lock();
 		SetConsoleTextAttribute(handle, ORANGE);
 		printf("\n\t[SOCKETSERVER] -> Parametros de carregamento recebidos!");
 		//SetConsoleTextAttribute(handle, WHITE);
@@ -46,7 +55,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		// Escrevendo dados na mensagem: 
 		snprintf(bufInt, 6, "%05d", ++countMessages);
 		memcpy(&ackMsg[3], bufInt, 5);
-		mtx.unlock();
+		mtx_LoadingParameters.unlock();
 		return ackMsg;
 		break;
 	default:

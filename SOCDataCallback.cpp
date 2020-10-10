@@ -131,6 +131,7 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 		return (E_INVALIDARG);
 	}
 	// Loop over items:
+	mtx_PositioningParameters.lock();
 	for (DWORD dwItem = 0; dwItem < dwCount; dwItem++)
 	{
 		// Print the item value, quality and time stamp. In this example, only
@@ -184,7 +185,7 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 		}
 		else printf ("IOPCDataCallback: Unsupported item type\n");
 	}
-
+	mtx_PositioningParameters.unlock();
 	// Return "success" code.  Note this does not mean that there were no 
 	// errors reported by the OPC Server, only that we successfully processed
 	// the callback.

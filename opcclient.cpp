@@ -35,7 +35,6 @@ OPCHANDLE hServerGroup; // server handle to the group
 
 void __cdecl opcClient(void) {
 		int i;
-		char buf[100];
 		int bRet;
 		MSG msg;
 		mtx.lock();
@@ -109,13 +108,12 @@ void __cdecl opcClient(void) {
 			}
 			TranslateMessage(&msg); // This call is not really needed ...
 			DispatchMessage(&msg);
-
 			// Check if should write the variable on the OPC server
 			if (SHOULD_WRITE) {
 				//Synchronous read of the device´s item value.
-				mtx.lock();
+				mtx_LoadingParameters.lock();
 				SetConsoleTextAttribute(handle, VIOLET);
-				printf("\n\n\t# [OPCCLIENT] WRITING LOADING PARAMETERS ON OPC SERVER:\n");
+				printf("\n\n\t# [OPCCLIENT] Writing synchronously LOADING PARAMETERS on OPC Server:\n");
 				SetConsoleTextAttribute(handle, WHITE);
 				VARIANT varValue; //to store the read value
 
@@ -124,16 +122,16 @@ void __cdecl opcClient(void) {
 				varValue.vt = VT_I1;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[4], varValue);
 				SetConsoleTextAttribute(handle, VIOLET);
-				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %i\n", 4, varValue.intVal);
+				printf("\t# [OPCCLIENT] WRITE ITEM %i (Open time of the silo gate): Value = %i\n", 4, varValue.intVal);
 				SetConsoleTextAttribute(handle, WHITE);
 				// Define the real4 value to write
 				varValue.fltVal = loadingParameters.oreQuantity;
 				varValue.vt = VT_R4;
 				WriteItem(pIOPCItemMgt, 1, H_ITEMS_READ_HANDLE[5], varValue);
 				SetConsoleTextAttribute(handle, VIOLET);
-				printf("\t# [OPCCLIENT] WRITE ITEM %i: Value = %7.2f\n\n", 5, varValue.fltVal);
+				printf("\t# [OPCCLIENT] WRITE ITEM %i (Ore quantity): Value = %7.2f\n\n", 5, varValue.fltVal);
 				SetConsoleTextAttribute(handle, WHITE);
-				mtx.unlock();
+				mtx_LoadingParameters.unlock();
 				SHOULD_WRITE = false;
 			}
 		} while (1);

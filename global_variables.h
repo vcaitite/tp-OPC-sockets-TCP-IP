@@ -31,7 +31,8 @@ extern char dataMsg[POSITION_MSG_LENGHT];
 extern char ackMsg[ACK_MSG_LENGHT];
 extern wchar_t* ITEM_IDS[];
 extern bool SHOULD_WRITE;
-extern std::mutex mtx;           // mutex for critical section
-
+extern std::mutex mtx_LoadingParameters;           // mutex for critical section
+extern std::mutex mtx_PositioningParameters;
+extern std::mutex mtx;
 
 #endif
