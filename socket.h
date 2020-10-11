@@ -2,6 +2,15 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
+/*
+ * Servidor de sockets utilizando WinSock 2
+ *
+ * Autor: Vítor Gabriel Reis Caitité &
+ *        Joao Pedro Antunes Ferreira
+ *
+ * NOTA: compilado com cl.exe (compilador do Visual Studio)
+ */
+
 #undef UNICODE
 #define WIN32_LEAN_AND_MEAN
 

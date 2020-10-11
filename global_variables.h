@@ -2,6 +2,12 @@
 #ifndef GLOBAL_VARIABLES_H
 #define GLOBAL_VARIABLES_H
 
+/*
+* Script where global system variables are defined.
+* Autor: Vítor Gabriel Reis Caitité &
+*        Joao Pedro Antunes Ferreira
+*/
+
 #include "data_types.h"
 #include "msg_treatment.h"
 #include <thread>         // std::thread

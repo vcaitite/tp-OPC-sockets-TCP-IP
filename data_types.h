@@ -1,6 +1,12 @@
 #pragma once
 #ifndef DATA_TYPES_H
 #define DATA_TYPES_H
+/*
+* Script where the project data structures are defined.
+* Autor: Vítor Gabriel Reis Caitité &
+*        Joao Pedro Antunes Ferreira
+*/
+
 
 #include <stdlib.h>
 #include <stdio.h>

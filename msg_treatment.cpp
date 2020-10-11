@@ -1,5 +1,13 @@
 #include "msg_treatment.h"
 
+/*
+* Script where the treatment of messages received via 
+* TCP / IP sockets are defined.
+* 
+* Autor: Vítor Gabriel Reis Caitité &
+*        Joao Pedro Antunes Ferreira
+*/
+
 char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 	char field_type[3];
 	field_type[2] = '\0';

@@ -1,7 +1,7 @@
 #include "opcclient.h"
 
 /* 
-* C++ class to implement the OPC Client behavior for the UFMG discipline project:
+* C++ script to implement the OPC Client behavior for the UFMG discipline project:
 * "Simulador do sistema de otimização do carregamento de vagões"
 * 
 * This file was modified based on the 'SimpleOPCClient_v3.cpp' file created and also modified 

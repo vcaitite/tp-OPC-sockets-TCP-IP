@@ -1,5 +1,11 @@
 #include "global_variables.h"
 
+/* 
+* Script where global system variables are defined.
+* Autor: Vítor Gabriel Reis Caitité &
+*        Joao Pedro Antunes Ferreira
+*/
+
 position_parameters_t positionParameters;
 loading_parameters_t loadingParameters;
 int countMessages = 0;

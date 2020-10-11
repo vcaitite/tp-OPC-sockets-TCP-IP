@@ -8,6 +8,7 @@
 // so that I defined it directly as a preprocessor option
 // (Project->Project Properties->Configiration Properties->C/C++ ->
 //  ->Preprocessor->Preprocessor definitions)
+
 #define _CRT_SECURE_NO_WARNINGS 1
 
 
