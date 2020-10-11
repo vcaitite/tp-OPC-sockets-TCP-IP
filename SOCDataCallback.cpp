@@ -115,7 +115,7 @@ HRESULT STDMETHODCALLTYPE SOCDataCallback::OnDataChange(
 	WORD quality;
 
 
-	printf("\n\n\t# [OPCCLIENT] Reading items values asynchrounously\n");
+	printf("\n\t# [OPCCLIENT] Reading items values asynchrounously\n");
 	// Validate arguments.  Return with "invalid argument" error code 
 	// if any are invalid. KEPWARE´s original code checks also if the
 	// "hgroup" parameter (the client´s handle for the group) was also

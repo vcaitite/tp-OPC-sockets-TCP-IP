@@ -100,6 +100,7 @@ void __cdecl opcClient(void) {
 		mtx.unlock();
 		// Enter in the process reading items loop	
 		do {
+			SetConsoleTextAttribute(handle, WHITE);
 			bRet = GetMessage(&msg, NULL, 0, 0);
 			if (!bRet) {
 				SetConsoleTextAttribute(handle, HLRED);

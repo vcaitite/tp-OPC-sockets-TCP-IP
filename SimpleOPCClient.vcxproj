@@ -92,7 +92,7 @@
     <ClCompile Include="msg_treatment.cpp" />
     <ClCompile Include="opcclient.cpp" />
     <ClCompile Include="opcda_i.c" />
-    <ClCompile Include="SimpleOPCClient_v3.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="SOCDataCallback.cpp" />
     <ClCompile Include="socket.cpp" />
     <ClCompile Include="SOCWrapperlFunctions.cpp" />
