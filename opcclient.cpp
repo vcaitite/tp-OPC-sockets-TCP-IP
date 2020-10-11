@@ -43,7 +43,7 @@ void __cdecl opcClient(void) {
 		// Obtém handle para a saída da console
 		handle = GetStdHandle(STD_OUTPUT_HANDLE);
 		if (handle == INVALID_HANDLE_VALUE) {
-			printf("Erro ao obter o handle para saida da console\n");
+			printf("Error getting the identifier for the console\n");
 		}
 		SetConsoleTextAttribute(handle, HLRED);
 		printf("\n\t* CONFIGURING OPC CLIENT SERVER: \n\n");

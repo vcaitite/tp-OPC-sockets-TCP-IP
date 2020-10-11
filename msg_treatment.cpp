@@ -7,7 +7,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 	int field_type_int = atoi(field_type);
 	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (handle == INVALID_HANDLE_VALUE) {
-		printf("\n\nErro ao obter o handle para saida da console\n");
+		printf("\n\nError getting the identifier for the console\n");
 	}
 	switch (field_type_int) {
 	case 55:
@@ -15,7 +15,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		dataMsg[1] = '5';
 		dataMsg[2] = '|';
 		SetConsoleTextAttribute(handle, HLBLUE);
-		printf("\n\t[SOCKETSERVER] -> Mensagem de solicitacao de dados recebida!");
+		printf("\n\t[SOCKETSERVER] -> Data request message received...\t");
 		//SetConsoleTextAttribute(handle, WHITE);
 		mtx_PositioningParameters.lock();
 		char bufInt[6];
@@ -42,16 +42,19 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		return &dataMsg[0];
 		break;
 	case 99:
+		while (SHOULD_WRITE == TRUE) {
+			// Ensuring that every message that arrives will be written to the OPC server!
+		}
 		SHOULD_WRITE = true;
 		mtx_LoadingParameters.lock();
 		SetConsoleTextAttribute(handle, ORANGE);
-		printf("\n\t[SOCKETSERVER] -> Parametros de carregamento recebidos!");
+		printf("\n\t[SOCKETSERVER] -> Charging parameters received...");
 		//SetConsoleTextAttribute(handle, WHITE);
 		// Lendo dados:
 		sscanf_s(&recvbuf[9], "%5d", &loadingParameters.openTime);
 		sscanf_s(&recvbuf[15], "%7f", &loadingParameters.oreQuantity);
-		printf("\n\t* Tempo de abertura da comporta do silo: %d seg.", loadingParameters.openTime);
-		printf("\n\t* Quantidade de minerio a carregar: %7.2f kg.\t\t", loadingParameters.oreQuantity);
+		printf("\n\t* Opening time of silo gate: %d sec.", loadingParameters.openTime);
+		printf("\n\t* Amount of ore to be loaded : %7.2f kg.\t\t", loadingParameters.oreQuantity);
 		// Escrevendo dados na mensagem: 
 		snprintf(bufInt, 6, "%05d", ++countMessages);
 		memcpy(&ackMsg[3], bufInt, 5);
@@ -60,7 +63,7 @@ char* socketMsgTreatment(char* recvbuf, int recvbuflen) {
 		break;
 	default:
 		SetConsoleTextAttribute(handle, HLRED);
-		printf("\tMensagem não reconhecida!\n");
+		printf("\tUnrecognized message!\n");
 		SetConsoleTextAttribute(handle, WHITE);
 		return NULL;
 		break;

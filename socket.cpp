@@ -143,13 +143,13 @@ void __cdecl socketServer(void)
 
                 if (iResult == 8) {
                     SetConsoleTextAttribute(handle, HLGREEN);
-                    printf("\t[SOCKETSERVER] <- Sending wagon positioning message...");
+                    printf("\t[SOCKETSERVER] <- Sending wagon positioning message...\t");
                     //SetConsoleTextAttribute(handle, WHITE);
                     iSendResult = send(ClientSocket, &sendMsg[0], (POSITION_MSG_LENGHT - 1), 0);
                 }
                 else if (iResult == 22) {
                     SetConsoleTextAttribute(handle, HLGREEN);
-                    printf("\t[SOCKETSERVER] <- Sending ACK msg to TCP / IP client...");
+                    printf("\t[SOCKETSERVER] <- Sending ACK msg to TCP / IP client... ");
                     //SetConsoleTextAttribute(handle, WHITE);
                     iSendResult = send(ClientSocket, &sendMsg[0], (ACK_MSG_LENGHT - 1), 0);
                 }
