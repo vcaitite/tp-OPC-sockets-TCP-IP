@@ -18,11 +18,11 @@ int main(void)
 	// Obtém handle para a saída da console
 	handle = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (handle == INVALID_HANDLE_VALUE) {
-		printf("Erro ao obter o handle para saida da console\n");
+		printf("Error getting the console handle\n");
 	}
 	SetConsoleTextAttribute(handle, HLRED);
 	
-	printf("\n\n\t\t\t\t Trabalho Pratico sobre OPC e Socket TCP/IP by Vitor & Joao\n");
+	printf("\n\n\t\t\t\t Practical Work on OPC and TCP / IP Socket by Vitor & Joao\n");
 	// Define and start socket server and opc client processes
 	std::thread socket_server(socketServer);
 
