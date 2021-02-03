@@ -5,8 +5,8 @@
      Trabalho Prático sobre OPC e sockets TCP-IP</a>
 </h1>
 
-<p align="justify">Esse trabalho visou colocar em prática boa parte do conteúdo aprendido durante as
-aulas referentes a Sockets TCP/IP, Component Object Model e OPC da disciplina Sistemas Distribuídos para Automação.
+<p align="justify"> Esse trabalho visou colocar em prática boa parte do conteúdo aprendido durante as
+aulas referentes a Sockets TCP/IP, Component Object Model e OPC da disciplina Sistemas Distribuídos para Automação. 
 
 Normalmente o fluxo de minério de ferro nas ferrovias inicia com o envio de vagões
 vazios aos pontos de carregamento. Para atingir os altos volumes de transporte, eficiência
@@ -24,5 +24,5 @@ O escopo desse trabalho é justamente desenvolver a aplicação capaz de integra
 CLP e o sistema de otimização. Para isso, nossa aplicação funcionará como um servidor
 de sockets, para se comunicar com o sistema de otimização (cliente de sockets), e como
 cliente OPC, para interagir com o servidor OPC clássico que tem o acesso as variáveis de
-processo do Controlador Lógico Programável.
- </p>
+processo do Controlador Lógico Programável. </p>
+
